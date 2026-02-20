@@ -1,4 +1,4 @@
-<!DOCTYPE html><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
@@ -54,7 +54,7 @@ body{
 /* BAŞLIK */
 .header{text-align:center}
 .title{
-  font-size:24px;
+  font-size:22px;
   opacity:.85;
 }
 .welcome{
@@ -63,9 +63,9 @@ body{
   padding:14px 42px;
   background:#f4e3b8;
   border-radius:34px;
-  font-size:28px;
+  font-size:30px;
   font-weight:700;
-  letter-spacing:5px;
+  letter-spacing:4px;
 }
 
 /* ORTA */
@@ -112,7 +112,7 @@ body{
 .hadis{
   background:#ffffffdd;
   border-radius:30px;
-  padding:10px 0;
+  padding:11px 0;
   overflow:hidden;
 }
 .hadis span{
@@ -142,8 +142,8 @@ body{
   <div class="weather" id="weather">Alanya | --°C</div>
   <div class="time-box">
     <div id="clock"></div>
-    <div>Perşembe | 19.02.2026</div>
-    <div style="font-size:12px;opacity:.7">1 Ramazan 1447</div>
+    <div>CUMA | 20.02.2026</div>
+    <div style="font-size:12px;opacity:.7">2 Ramazan 1447</div>
   </div>
 </div>
 
@@ -155,7 +155,7 @@ body{
 <div class="center">
   <div id="countdown">--:--:--</div>
   <div id="countLabel"></div>
-  <div class="host">İftar Sahibi: Ömer KOPARAN</div>
+  <div class="host" id="iftarOwner">İftar Sahibi: ÖMER GÜLDALI</div>
 </div>
 
 <div class="times" id="times">
@@ -167,20 +167,20 @@ body{
   <div class="head">İftar</div>
   <div class="head">Yatsı</div>
 
-  <div class="time" data-name="İmsak" data-time="05:54">05:54</div>
-  <div class="time" data-name="Sabah" data-time="06:14">06:14</div>
-  <div class="time" data-name="Güneş" data-time="07:27">07:27</div>
+  <div class="time" data-name="İmsak" data-time="05:53">05:53</div>
+  <div class="time" data-name="Sabah" data-time="06:13">06:13</div>
+  <div class="time" data-name="Güneş" data-time="07:26">07:26</div>
   <div class="time" data-name="Öğle" data-time="13:16">13:16</div>
-  <div class="time" data-name="İkindi" data-time="16:21">16:21</div>
-  <div class="time" data-name="İftar" data-time="18:45">18:45</div>
-  <div class="time" data-name="Yatsı" data-time="20:08">20:08</div>
+  <div class="time" data-name="İkindi" data-time="16:22">16:22</div>
+  <div class="time" data-name="İftar" data-time="18:46">18:46</div>
+  <div class="time" data-name="Yatsı" data-time="20:09">20:09</div>
 </div>
 
 <div class="hadis">
-  <span>Resûlullah ﷺ buyurdular: “Ayların efendisi Ramazan-ı şerif aydır, günlerin efendisi de cuma günüdür.” (Kenzü’l-Ummâl)</span>
+  <span>Resûlullah ﷺ buyurdular:“Âdemoğlunun her ameli(nin sevabı) kat kat verilir; bir hasenenin karşılığı, on mislinden yedi yüz misline kadar olur. Allâh Azze ve Celle şöyle buyurdu: Ancak oruç müstesnâ. Çünkü oruç, benim içindir ve onun mükâfatını ancak ben veririm. Zira (kulum), şehvetini, yemesini, içmesini, sırf benim için terk eder.” (Sünen-i Nesâî)”</span>
 </div>
 
-<div class="footer">RAMAZAN-I ŞERİFİMİZ MÜBAREK OLSUN!</div>
+<div class="footer">RAMAZAN-I ŞERİFİNİZ MÜBAREK OLSUN!</div>
 
 </div>
 </div>
@@ -189,7 +189,7 @@ body{
 /* SAAT */
 setInterval(()=>{
   document.getElementById("clock").innerText =
-    new Date().toLocaleTimeString("tr-TR");
+    new Date().toLocaleTimeString("tr-TR",{hour:"2-digit",minute:"2-digit",second:"2-digit"});
 },1000);
 
 /* GERİ SAYIM */
@@ -231,7 +231,7 @@ async function loadWeather(){
     );
     const d=await r.json();
     weather.innerText=`${d.name} | ${Math.round(d.main.temp)}°C ${d.weather[0].description}`;
-  }catch(e){
+  }catch{
     weather.innerText="Alanya | Hava bilgisi alınamadı";
   }
 }
@@ -241,5 +241,3 @@ setInterval(loadWeather,600000);
 
 </body>
 </html>
-
-
