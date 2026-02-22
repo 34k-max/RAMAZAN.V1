@@ -7,7 +7,7 @@
 
 <style>
   :root{
-    --bg:#90A7B2;                 /* ARKA PLAN */
+    --bg:#90A7B2;
     --ink:#1e2730;
     --ink2:rgba(30,39,48,.78);
     --line:rgba(30,39,48,.18);
@@ -15,460 +15,404 @@
     --shadow2:0 10px 22px rgba(0,0,0,.16);
     --radius:18px;
 
-    --spark-alpha: .95;
-    --bokeh-alpha: .18;
+    --spark-alpha:.95;
+    --bokeh-alpha:.18;
+
+    /* solda saat kutusu çakışmasın */
+    --clockSpace:132px;
   }
 
   *{box-sizing:border-box;margin:0;padding:0}
   body{
     height:100vh;
     overflow:hidden;
-    background: var(--bg);
-    color: var(--ink);
-    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, "Noto Sans", "Helvetica Neue", sans-serif;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,"Noto Sans","Helvetica Neue",sans-serif;
   }
 
-  /* ======= PROFESYONEL ARKA PLAN: YUMUŞAK IŞIK + PARILTILAR ======= */
-  .bgFX{
-    position:fixed; inset:0;
-    pointer-events:none;
-    overflow:hidden;
-    z-index:0;
-  }
+  /* ===== Arka plan FX ===== */
+  .bgFX{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:0}
   .bgFX:before{
-    content:"";
-    position:absolute; inset:-20%;
+    content:"";position:absolute;inset:-20%;
     background:
       radial-gradient(1000px 650px at 20% 18%, rgba(255,255,255,.22), transparent 60%),
       radial-gradient(900px 600px at 78% 30%, rgba(255,255,255,.16), transparent 62%),
       radial-gradient(1100px 700px at 45% 78%, rgba(255,255,255,.12), transparent 65%),
       linear-gradient(180deg, rgba(255,255,255,.11), transparent 45%);
-    filter: blur(1px);
-    animation: glowMove 18s ease-in-out infinite alternate;
+    filter:blur(1px);
+    animation:glowMove 18s ease-in-out infinite alternate;
   }
   @keyframes glowMove{
-    from{ transform: translate3d(-1.2%, -1.2%, 0) scale(1.02); }
-    to  { transform: translate3d( 1.2%,  1.0%, 0) scale(1.05); }
+    from{transform:translate3d(-1.2%,-1.2%,0) scale(1.02)}
+    to{transform:translate3d(1.2%,1.0%,0) scale(1.05)}
   }
-
   .spark{
-    position:absolute;
-    width: 6px; height: 6px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(255,255,255,var(--spark-alpha)) 0%, rgba(255,255,255,.28) 55%, transparent 70%);
-    filter: blur(.2px);
-    opacity: 0;
-    animation: twinkle var(--dur) ease-in-out infinite;
-    transform: translate3d(0,0,0);
+    position:absolute;border-radius:50%;
+    background:radial-gradient(circle, rgba(255,255,255,var(--spark-alpha)) 0%, rgba(255,255,255,.28) 55%, transparent 70%);
+    filter:blur(.2px);opacity:0;
+    animation:twinkle var(--dur) ease-in-out infinite;
+    transform:translate3d(0,0,0);
   }
   @keyframes twinkle{
-    0%   { opacity: 0; transform: translateY(0) scale(.65); }
-    18%  { opacity: .85; }
-    50%  { opacity: .25; transform: translateY(-16px) scale(1); }
-    82%  { opacity: .75; }
-    100% { opacity: 0; transform: translateY(-32px) scale(.7); }
+    0%{opacity:0;transform:translate3d(0,0,0) scale(.65)}
+    18%{opacity:.85}
+    50%{opacity:.25;transform:translate3d(0,-16px,0) scale(1)}
+    82%{opacity:.75}
+    100%{opacity:0;transform:translate3d(0,-32px,0) scale(.7)}
   }
-
   .bokeh{
-    position:absolute;
-    width: 120px; height: 120px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(255,255,255,var(--bokeh-alpha)), transparent 65%);
-    filter: blur(1px);
-    opacity:0;
-    animation: bokehFloat var(--bdur) ease-in-out infinite;
+    position:absolute;border-radius:50%;
+    background:radial-gradient(circle, rgba(255,255,255,var(--bokeh-alpha)), transparent 65%);
+    filter:blur(1px);opacity:0;
+    animation:bokehFloat var(--bdur) ease-in-out infinite;
+    transform:translate3d(0,0,0);
   }
   @keyframes bokehFloat{
-    0%{ opacity:0; transform: translate3d(0,0,0) scale(.9); }
-    20%{ opacity:.85; }
-    60%{ opacity:.25; transform: translate3d(var(--dx), calc(var(--dy) * -1), 0) scale(1.05); }
-    100%{ opacity:0; transform: translate3d(calc(var(--dx) * 1.2), calc(var(--dy) * -1.4), 0) scale(.95); }
+    0%{opacity:0;transform:translate3d(0,0,0) scale(.9)}
+    20%{opacity:.85}
+    60%{opacity:.25;transform:translate3d(var(--dx), calc(var(--dy) * -1), 0) scale(1.05)}
+    100%{opacity:0;transform:translate3d(calc(var(--dx) * 1.2), calc(var(--dy) * -1.4), 0) scale(.95)}
   }
 
   .wrap{
     height:100vh;
     display:grid;
-    grid-template-columns: 22% 56% 22%;
-    padding: 18px 18px 56px;
-    gap: 14px;
+    grid-template-columns:22% 56% 22%;
+    padding:18px 18px 56px;
+    gap:14px;
     position:relative;
     z-index:2;
   }
 
-  /* ===== PANELLER: Selâtin Camii görseli + cam efekti ===== */
-  .left, .right{
+  /* ===== Paneller ===== */
+  .left,.right{
     position:relative;
-    border-radius: var(--radius);
-    background: linear-gradient(180deg, rgba(255,255,255,.20), rgba(255,255,255,.10));
-    box-shadow: var(--shadow2);
-    border: 1px solid rgba(255,255,255,.22);
-    backdrop-filter: blur(9px);
+    border-radius:var(--radius);
+    background:linear-gradient(180deg, rgba(255,255,255,.20), rgba(255,255,255,.10));
+    box-shadow:var(--shadow2);
+    border:1px solid rgba(255,255,255,.22);
+    backdrop-filter:blur(9px);
     overflow:hidden;
   }
-
   .left::before{
-    content:"";
-    position:absolute; inset:0;
+    content:"";position:absolute;inset:0;
     background:
       linear-gradient(180deg, rgba(144,167,178,.20), rgba(144,167,178,.45)),
       url("assets/selatin-sol.jpg");
-    background-size: cover;
-    background-position: center;
-    opacity:.32;
-    filter: saturate(1.05) contrast(1.05);
-    transform: scale(1.03);
+    background-size:cover;background-position:center;
+    opacity:.32;filter:saturate(1.05) contrast(1.05);
+    transform:scale(1.03);
     pointer-events:none;
   }
   .right::before{
-    content:"";
-    position:absolute; inset:0;
+    content:"";position:absolute;inset:0;
     background:
       linear-gradient(180deg, rgba(144,167,178,.18), rgba(144,167,178,.48)),
       url("assets/selatin-sag.jpg");
-    background-size: cover;
-    background-position: center;
-    opacity:.32;
-    filter: saturate(1.05) contrast(1.05);
-    transform: scale(1.03);
+    background-size:cover;background-position:center;
+    opacity:.32;filter:saturate(1.05) contrast(1.05);
+    transform:scale(1.03);
     pointer-events:none;
   }
+  .left > *, .right > *{position:relative;z-index:2}
 
-  .left > *, .right > *{ position:relative; z-index:2; }
-
-  .left{ padding: 18px 18px 14px; }
+  .left{
+    padding:16px 16px calc(14px + var(--clockSpace));
+  }
   .right{
-    padding: 18px;
+    padding:16px;
     display:flex;
     flex-direction:column;
-    gap: 12px;
+    gap:10px;
+    min-height:0;
   }
 
-  /* COUNTDOWN */
+  /* Countdown */
   .countdown{
-    margin-top: 10px;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    text-align:center;
-    gap:10px;
+    margin-top:4px;
+    display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;
   }
   .countdownLabel{
-    font-size:16px;
-    font-weight:950;
-    letter-spacing:.2px;
-    text-shadow: 0 1px 0 rgba(255,255,255,.25);
-    text-transform: uppercase;
+    font-size:15px;font-weight:950;letter-spacing:.2px;
+    text-shadow:0 1px 0 rgba(255,255,255,.25);
+    text-transform:uppercase;
   }
   .countdownTime{
     display:inline-block;
-    padding: 10px 16px;
-    border-radius: 14px;
-    background: rgba(30,39,48,.10);
-    border: 1px solid rgba(30,39,48,.18);
-    font-variant-numeric: tabular-nums;
-    font-weight: 950;
-    font-size: 22px;
-    box-shadow: inset 0 0 0 1px rgba(255,255,255,.25), 0 10px 18px rgba(0,0,0,.10);
-    transition: color .2s ease, transform .2s ease, filter .2s ease;
+    padding:8px 12px;
+    border-radius:14px;
+    background:rgba(30,39,48,.10);
+    border:1px solid rgba(30,39,48,.18);
+    font-variant-numeric:tabular-nums;
+    font-weight:950;
+    font-size:20px;
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.25), 0 10px 18px rgba(0,0,0,.10);
+    transition:color .2s ease, transform .2s ease, filter .2s ease;
+    will-change:transform;
   }
   .countdownTime.critical{
     color:#d40000;
-    border-color: rgba(212,0,0,.40);
-    background: rgba(212,0,0,.08);
-    filter: drop-shadow(0 0 10px rgba(212,0,0,.45));
-    animation: countdownShake .24s infinite;
+    border-color:rgba(212,0,0,.40);
+    background:rgba(212,0,0,.08);
+    filter:drop-shadow(0 0 10px rgba(212,0,0,.45));
+    animation:countdownShake .24s infinite;
   }
   @keyframes countdownShake{
-    0%{transform:translateX(0)}
-    20%{transform:translateX(-1px)}
-    40%{transform:translateX(1px)}
-    60%{transform:translateX(-1px)}
-    80%{transform:translateX(1px)}
-    100%{transform:translateX(0)}
+    0%{transform:translate3d(0,0,0)}
+    20%{transform:translate3d(-1px,0,0)}
+    40%{transform:translate3d(1px,0,0)}
+    60%{transform:translate3d(-1px,0,0)}
+    80%{transform:translate3d(1px,0,0)}
+    100%{transform:translate3d(0,0,0)}
   }
 
   .divider{
-    height: 2px;
-    background: linear-gradient(90deg, transparent, rgba(30,39,48,.30), transparent);
-    margin: 14px 0 18px;
+    height:2px;
+    background:linear-gradient(90deg, transparent, rgba(30,39,48,.30), transparent);
+    margin:10px 0 12px;
   }
 
-  .vakitler{ margin-top: 34px; }
+  /* Vakitler */
+  .vakitler{margin-top:6px}
   .row{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    padding: 10px 8px;
-    border-bottom: 1px solid var(--line);
-    font-size: 19px;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:7px 8px;border-bottom:1px solid var(--line);
+    font-size:16.8px;
   }
-  .row .name{ font-weight: 700; color: var(--ink2); }
-  .row .val{ font-variant-numeric: tabular-nums; font-weight: 950; color: var(--ink); }
-
+  .row .name{font-weight:750;color:var(--ink2)}
+  .row .val{font-variant-numeric:tabular-nums;font-weight:950;color:var(--ink)}
   .row.active{
-    border-bottom-color: rgba(30,39,48,.28);
-    background: linear-gradient(90deg, rgba(255,255,255,.25), transparent);
-    border-radius: 12px;
-    animation: pulse 1.35s ease-in-out infinite;
-    box-shadow: 0 0 0 2px rgba(255,255,255,.12) inset, 0 10px 18px rgba(0,0,0,.10);
+    border-bottom-color:rgba(30,39,48,.28);
+    background:linear-gradient(90deg, rgba(255,255,255,.25), transparent);
+    border-radius:12px;
+    animation:pulse 1.35s ease-in-out infinite;
+    box-shadow:0 0 0 2px rgba(255,255,255,.12) inset, 0 10px 18px rgba(0,0,0,.10);
   }
-  .row.active .name{ color: var(--ink); }
-  .row.active .val{ color: #7a2e2e; }
+  .row.active .name{color:var(--ink)}
+  .row.active .val{color:#7a2e2e}
   @keyframes pulse{
-    0%{ transform: scale(1); }
-    50%{ transform: scale(1.03); }
-    100%{ transform: scale(1); }
+    0%{transform:scale(1)}
+    50%{transform:scale(1.03)}
+    100%{transform:scale(1)}
   }
 
-  /* CENTER */
-  .center{
-    display:flex;
-    align-items:center;
-    justify-content:center;
-  }
+  /* Center */
+  .center{display:flex;align-items:center;justify-content:center}
   .centerStack{
-    width: 94%;
-    height: 86%;
+    width:94%;
+    height:86%;
     display:flex;
     flex-direction:column;
-    gap: 12px;
+    gap:12px;
     justify-content:center;
   }
-
   .bannerBox{
     text-align:center;
-    font-weight: 950;
-    letter-spacing: .7px;
-    font-size: 26px;
-    padding: 10px 12px;
-    border-radius: 16px;
-    border: 1px solid rgba(255,255,255,.24);
-    background: rgba(255,255,255,.18);
-    box-shadow: 0 10px 22px rgba(0,0,0,.14);
-    margin-top: -10px;
-    margin-bottom: 2px;
+    font-weight:950;
+    letter-spacing:.7px;
+    font-size:26px;
+    padding:10px 12px;
+    border-radius:16px;
+    border:1px solid rgba(255,255,255,.24);
+    background:rgba(255,255,255,.18);
+    box-shadow:0 10px 22px rgba(0,0,0,.14);
+    margin-top:-10px;
+    margin-bottom:2px;
   }
 
   .photoCard{
-    flex: 1.12;
-    border-radius: 26px;
+    flex:1.12;
+    border-radius:26px;
     position:relative;
-    box-shadow: var(--shadow);
-    border: 1px solid rgba(255,255,255,.25);
-    background: rgba(255,255,255,.10);
+    box-shadow:var(--shadow);
+    border:1px solid rgba(255,255,255,.25);
+    background:rgba(255,255,255,.10);
     overflow:hidden;
   }
   .photoCard:before{
     content:"";
-    position:absolute; inset:14px;
-    border-radius: 18px;
-    border: 2px solid rgba(255,255,255,.18);
+    position:absolute;inset:14px;
+    border-radius:18px;
+    border:2px solid rgba(255,255,255,.18);
     pointer-events:none;
-    box-shadow: inset 0 0 0 1px rgba(30,39,48,.12);
+    box-shadow:inset 0 0 0 1px rgba(30,39,48,.12);
   }
   .photoCard:after{
     content:"";
-    position:absolute; inset:-40%;
-    background: linear-gradient(120deg, transparent 40%, rgba(255,255,255,.14) 50%, transparent 60%);
-    transform: translateX(-40%) rotate(8deg);
-    animation: shine 7s ease-in-out infinite;
+    position:absolute;inset:-40%;
+    background:linear-gradient(120deg, transparent 40%, rgba(255,255,255,.14) 50%, transparent 60%);
+    transform:translate3d(-40%,0,0) rotate(8deg);
+    animation:shine 7s ease-in-out infinite;
     pointer-events:none;
   }
   @keyframes shine{
-    0%,55%{ transform: translateX(-55%) rotate(8deg); opacity:0; }
-    60%{ opacity:.40; }
-    100%{ transform: translateX(55%) rotate(8deg); opacity:0; }
+    0%,55%{transform:translate3d(-55%,0,0) rotate(8deg);opacity:0}
+    60%{opacity:.40}
+    100%{transform:translate3d(55%,0,0) rotate(8deg);opacity:0}
   }
 
   .photo{
-    position:absolute; inset:0;
-    width:100%; height:100%;
+    position:absolute;inset:0;
+    width:100%;height:100%;
     object-fit:cover;
     opacity:0;
-    transition: opacity 1.8s ease;
-    transform: scale(1.02);
+    transition:opacity 1.8s ease;
+    transform:scale(1.02);
   }
   .photo.on{
     opacity:1;
-    animation: kenburns 30s linear forwards;
+    animation:kenburns 30s linear forwards;
   }
   @keyframes kenburns{
-    from{ transform: scale(1.02); }
-    to{ transform: scale(1.08); }
+    from{transform:scale(1.02)}
+    to{transform:scale(1.08)}
   }
 
   .belowBox{
     text-align:center;
-    font-weight: 900;
-    font-size: 18px;
-    padding: 10px 12px;
-    border-radius: 16px;
-    border: 1px solid rgba(255,255,255,.22);
-    background: rgba(255,255,255,.16);
-    box-shadow: 0 8px 18px rgba(0,0,0,.12);
-    margin-top: 10px;
+    font-weight:900;
+    font-size:18px;
+    padding:10px 12px;
+    border-radius:16px;
+    border:1px solid rgba(255,255,255,.22);
+    background:rgba(255,255,255,.16);
+    box-shadow:0 8px 18px rgba(0,0,0,.12);
+    margin-top:10px;
   }
 
-  /* RIGHT HADİS */
+  /* Hadis */
   .hadisTitle{
     text-align:center;
-    font-weight: 950;
+    font-weight:950;
     letter-spacing:.4px;
-    font-size: 18px;
-    padding: 10px 12px;
-    border-radius: 14px;
-    border: 1px solid rgba(255,255,255,.22);
-    background: rgba(255,255,255,.16);
-    box-shadow: 0 8px 18px rgba(0,0,0,.10);
+    font-size:17px;
+    padding:9px 11px;
+    border-radius:14px;
+    border:1px solid rgba(255,255,255,.22);
+    background:rgba(255,255,255,.16);
+    box-shadow:0 8px 18px rgba(0,0,0,.10);
+    flex:0 0 auto;
   }
   .hadisCard{
     position:relative;
-    flex:1;
-    border-radius: 16px;
-    border: 1px solid rgba(255,255,255,.18);
-    background: rgba(255,255,255,.08);
+    flex:1 1 auto;
+    min-height:0;
+    border-radius:16px;
+    border:1px solid rgba(255,255,255,.18);
+    background:rgba(255,255,255,.08);
     overflow:hidden;
-    padding: 14px 14px;
+    padding:12px;
   }
   .hadisCard:before{
     content:"";
-    position:absolute; inset:12px;
-    border-radius: 12px;
-    border: 1px solid rgba(255,255,255,.14);
+    position:absolute;inset:10px;
+    border-radius:12px;
+    border:1px solid rgba(255,255,255,.14);
     pointer-events:none;
   }
   .hadisCard:after{
     content:"";
-    position:absolute; inset:0;
-    background: radial-gradient(520px 320px at 30% 20%, rgba(255,255,255,.12), transparent 60%);
-    opacity:.0;
-    animation: hadisGlow 10s ease-in-out infinite;
+    position:absolute;inset:0;
+    background:radial-gradient(520px 320px at 30% 20%, rgba(255,255,255,.12), transparent 60%);
+    animation:hadisGlow 10s ease-in-out infinite;
+    opacity:.06;
     pointer-events:none;
   }
   @keyframes hadisGlow{
-    0%{ opacity:.06; }
-    50%{ opacity:.34; }
-    100%{ opacity:.06; }
+    0%{opacity:.06}
+    50%{opacity:.34}
+    100%{opacity:.06}
   }
-
   .hadisViewport{
     position:absolute;
-    inset: 14px 14px 14px 14px;
+    inset:12px;
     overflow:hidden;
   }
   .hadisText{
-    font-size: 16.5px;
-    font-weight: 700;
-    color: rgba(30,39,48,.90);
-    line-height: 1.45;
-    text-shadow: 0 1px 0 rgba(255,255,255,.20);
-    will-change: transform;
+    font-size:16px;
+    font-weight:700;
+    color:rgba(30,39,48,.90);
+    line-height:1.42;
+    text-shadow:0 1px 0 rgba(255,255,255,.20);
+    will-change:transform;
   }
 
-  /* ✅ CLOCK kutusu sol alta alındı */
+  /* Clock sol alt */
   .clockBox{
-    position: fixed;
-    left: 22px;          /* sağ yerine sol */
-    right: auto;
-    bottom: 58px;
-    padding: 10px 10px;
-    border-radius: 14px;
-    background: rgba(255,255,255,.22);
-    border: 1px solid rgba(255,255,255,.22);
-    box-shadow: 0 10px 24px rgba(0,0,0,.16);
-    backdrop-filter: blur(10px);
-    min-width: 195px;
-    text-align:left;     /* sağ yerine sol */
+    position:fixed;
+    left:22px;
+    bottom:58px;
+    padding:10px;
+    border-radius:14px;
+    background:rgba(255,255,255,.22);
+    border:1px solid rgba(255,255,255,.22);
+    box-shadow:0 10px 24px rgba(0,0,0,.16);
+    backdrop-filter:blur(10px);
+    min-width:190px;
+    text-align:left;
     z-index:3;
   }
-  .clock{
-    font-size: 24px;
-    font-weight: 950;
-    letter-spacing:.5px;
-    font-variant-numeric: tabular-nums;
-  }
-  .date{
-    margin-top: 4px;
-    font-size: 12.5px;
-    color: var(--ink2);
-    line-height: 1.25;
-  }
-  .hicri{
-    font-size: 12px;
-    color: rgba(30,39,48,.62);
-    line-height: 1.25;
-  }
+  .clock{font-size:24px;font-weight:950;letter-spacing:.5px;font-variant-numeric:tabular-nums}
+  .date{margin-top:4px;font-size:12.5px;color:var(--ink2);line-height:1.25}
+  .hicri{font-size:12px;color:rgba(30,39,48,.62);line-height:1.25}
 
-  /* TICKER */
+  /* Ticker (rAF) */
   .ticker{
-    position: fixed;
-    left: 0; right: 0; bottom: 0;
-    height: 52px;
-    background: rgba(30,39,48,.90);
-    color: #fff;
-    display:flex;
-    align-items:center;
+    position:fixed;left:0;right:0;bottom:0;
+    height:52px;
+    background:rgba(30,39,48,.90);
+    color:#fff;
+    display:flex;align-items:center;
     overflow:hidden;
-    border-top: 1px solid rgba(255,255,255,.16);
+    border-top:1px solid rgba(255,255,255,.16);
     z-index:3;
+    contain:content;
   }
   .ticker .track{
     white-space:nowrap;
-    padding-left: 100%;
-    animation: scroll 32s linear infinite;
-    font-size: 19px;
-    font-weight: 900;
-    letter-spacing:.2px;
-    text-shadow: 0 1px 0 rgba(0,0,0,.25);
-    will-change: transform;
-  }
-  @keyframes scroll{
-    from{ transform: translateX(0); }
-    to{ transform: translateX(-100%); }
+    font-size:19px;
+    font-weight:900;
+    letter-spacing:.15px;
+    text-shadow:none;
+    will-change:transform;
+    transform:translate3d(0,0,0);
+    backface-visibility:hidden;
+    padding-right:80px;
   }
 
-  .muted{ color: rgba(30,39,48,.55); font-size: 14px; }
+  .muted{color:rgba(30,39,48,.55);font-size:14px}
 
-  /* ✅ VAKİT BİLDİRİMİ */
+  /* Vakit bildirimi */
   .toast{
-    position: fixed;
-    top: 18px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 999;
+    position:fixed;top:18px;left:50%;
+    transform:translateX(-50%);
+    z-index:999;
     pointer-events:none;
-    opacity:0;
-    scale:.98;
-    padding: 12px 16px;
-    border-radius: 16px;
-    background: rgba(255,255,255,.26);
-    border: 1px solid rgba(255,255,255,.28);
-    box-shadow: 0 18px 40px rgba(0,0,0,.22);
-    backdrop-filter: blur(10px);
-    min-width: 360px;
+    opacity:0;scale:.98;
+    padding:12px 16px;
+    border-radius:16px;
+    background:rgba(255,255,255,.26);
+    border:1px solid rgba(255,255,255,.28);
+    box-shadow:0 18px 40px rgba(0,0,0,.22);
+    backdrop-filter:blur(10px);
+    min-width:360px;
     text-align:center;
   }
-  .toast.on{ animation: toastInOut 6.5s ease both; }
+  .toast.on{animation:toastInOut 6.5s ease both}
   @keyframes toastInOut{
-    0%{ opacity:0; transform: translateX(-50%) translateY(-10px); }
-    12%{ opacity:1; transform: translateX(-50%) translateY(0); }
-    82%{ opacity:1; transform: translateX(-50%) translateY(0); }
-    100%{ opacity:0; transform: translateX(-50%) translateY(-10px); }
+    0%{opacity:0;transform:translate3d(-50%,-10px,0)}
+    12%{opacity:1;transform:translate3d(-50%,0,0)}
+    82%{opacity:1;transform:translate3d(-50%,0,0)}
+    100%{opacity:0;transform:translate3d(-50%,-10px,0)}
   }
   .toastTitle{
-    font-weight: 950;
-    letter-spacing:.6px;
-    font-size: 18px;
-    text-transform: uppercase;
-    color: rgba(30,39,48,.92);
-    text-shadow: 0 1px 0 rgba(255,255,255,.25);
+    font-weight:950;letter-spacing:.6px;font-size:18px;
+    text-transform:uppercase;
+    color:rgba(30,39,48,.92);
+    text-shadow:0 1px 0 rgba(255,255,255,.25);
   }
-  .toastSub{
-    margin-top: 4px;
-    font-size: 13px;
-    font-weight: 800;
-    color: rgba(30,39,48,.72);
-  }
+  .toastSub{margin-top:4px;font-size:13px;font-weight:800;color:rgba(30,39,48,.72)}
 </style>
 </head>
 
@@ -516,7 +460,6 @@
     </aside>
   </div>
 
-  <!-- ✅ Saat kutusu artık sol alt -->
   <div class="clockBox">
     <div class="clock" id="clock">00:00:00</div>
     <div class="date" id="miladi">--</div>
@@ -528,41 +471,41 @@
   </div>
 
 <script>
-/* ====== TSV VERİ (VAKİTLERİ BOZMADAN) ====== */
+/* ====== TSV VERİ (NAMAZ VAKİTLERİ + HADİS) ====== */
 const TSV_DATA = `tarih\tgun\thicri\timsak\tsabah\tgunes\togle\tikindi\tiftar\tyatsi\thadis
 17.02.2026\tSalı\t29 Şaban 1447\t05:56\t06:16\t07:30\t13:16\t16:19\t18:43\t20:06\tResûlullah Efendimiz sallallâhü aleyhi ve sellem buyurdular: “Allâhü Teâlâ, göklerin ve yerin konuşmasına izin verseydi, şüphesiz Ramazan ayında oruç tutanları Cennet’le müjdelerlerdi.” (Süyûtî, Câmiu’l-Ehâdîs)
 18.02.2026\tÇarşamba\t30 Şaban 1447\t05:55\t06:15\t07:28\t13:16\t16:20\t18:44\t20:07\tResûlullah Efendimiz sallallâhü aleyhi ve sellem buyurdular: “Her kim Ramazân-ı şerîf orucunu tutar, hudud ve şartlarını bilir ve onda sakınılması icap eden şeylerden de sakınırsa böyle tutulan oruç, geçmiş (küçük) günahlara keffâret olur.” (Müsned-i Ahmed bin Hanbel)
 19.02.2026\tPerşembe\t1 Ramazan 1447\t05:54\t06:14\t07:27\t13:16\t16:21\t18:45\t20:08\tResûlullah Efendimiz sallallâhü aleyhi ve sellem buyurdular: “Ayların efendisi, Ramazân-ı şerîf ayıdır, günlerin efendisi de cuma günüdür.” (Kenzü’l-Ummâl)
-20.02.2026\tCuma\t2 Ramazan 1447\t05:53\t06:13\t07:26\t13:16\t16:22\t18:46\t20:09\tResûlullah (s.a.v.) buyurdular: “Âdemoğlunun her ameli(nin sevabı) kat kat verilir; bir hasenenin karşılığı, on mislinden yedi yüz misline kadar olur. Allâh Azze ve Celle şöyle buyurdu: Ancak oruç müstesnâ...” (Sünen-i Nesâî)
-21.02.2026\tCumartesi\t3 Ramazan 1447\t05:52\t06:12\t07:25\t13:16\t16:22\t18:47\t20:10\tResûlullah Efendimiz sallallâhü aleyhi ve sellem buyurdular: “Kullar, Ramazân-ı şerîf ayında ne olduğunu bilselerdi...” (Müsned-i Ebû Ya’lâ)
-22.02.2026\tPazar\t4 Ramazan 1447\t05:51\t06:11\t07:24\t13:15\t16:23\t18:48\t20:11\tResûlullah Efendimiz sallallâhü aleyhi ve sellem buyurdular: “İlim, İslâm’ın hayatı ve imanın direğidir...” (Süyûtî, el-Câmiu’s-Sağîr)
-23.02.2026\tPazartesi\t5 Ramazan 1447\t05:49\t06:09\t07:22\t13:15\t16:24\t18:49\t20:12\tHazret-i Ali radıyallâhü anh şöyle buyurdu: “Her bir dua, salevât getirilmedikçe...” (Beyhakî, Şuabü’l-Îmân)
-24.02.2026\tSalı\t6 Ramazan 1447\t05:48\t06:08\t07:21\t13:15\t16:24\t18:50\t20:13\tAllâhü Teâlâ şöyle buyurdu -meâlen-: “Ve biz onları emrimizle rehberler kıldık...” (Enbiyâ 73)
-25.02.2026\tÇarşamba\t7 Ramazan 1447\t05:47\t06:07\t07:20\t13:15\t16:25\t18:51\t20:14\tResûlullah Efendimiz sallallâhü aleyhi ve sellem buyurdular: “Kim dünyasını severse...” (Müsned-i Ahmed)
-26.02.2026\tPerşembe\t8 Ramazan 1447\t05:46\t06:06\t07:18\t13:15\t16:26\t18:52\t20:15\tKâ‘bü’l-Ahbâr'dan rivâyet: “...oruç tutanlar müstesna; ecirleri hesapsız...” (Beyhakî)
-27.02.2026\tCuma\t9 Ramazan 1447\t05:44\t06:04\t07:17\t13:15\t16:26\t18:53\t20:16\tResûlullah Efendimiz sallallâhü aleyhi ve sellem buyurdular: “Namaz... en hayırlısıdır...” (Taberânî)
-28.02.2026\tCumartesi\t10 Ramazan 1447\t05:43\t06:03\t07:16\t13:15\t16:27\t18:54\t20:17\tResûlullah Efendimiz sallallâhü aleyhi ve sellem buyurdular: “...o kalptir.” (Buhârî)
-01.03.2026\tPazar\t11 Ramazan 1447\t05:42\t06:02\t07:15\t13:14\t16:27\t18:55\t20:17\tResûlullah Efendimiz sallallâhü aleyhi ve sellem buyurdular: “Oku ve yüksel...” (İbn Mâce)
-02.03.2026\tPazartesi\t12 Ramazan 1447\t05:41\t06:01\t07:13\t13:14\t16:28\t18:56\t20:18\tResûlullah Efendimiz sallallâhü aleyhi ve sellem buyurdular: “...istiğfârda bulunursa...” (Heysemî)
-03.03.2026\tSalı\t13 Ramazan 1447\t05:39\t05:59\t07:12\t13:14\t16:29\t18:57\t20:19\tAllâhü Teâlâ buyurdu -meâlen-: “...yardımcıları olun...” (Saff 14)
-04.03.2026\tÇarşamba\t14 Ramazan 1447\t05:38\t05:58\t07:10\t13:14\t16:29\t18:58\t20:20\tResûlullah Efendimiz sallallâhü aleyhi ve sellem buyurdular: “...îtikâf yapan...” (İbn Mâce)
-05.03.2026\tPerşembe\t15 Ramazan 1447\t05:37\t05:57\t07:09\t13:13\t16:30\t18:58\t20:21\tResûlullah Efendimiz sallallâhü aleyhi ve sellem buyurdular: “Kadir Gecesi’ni...” (Müttefekun Aleyh)
-06.03.2026\tCuma\t16 Ramazan 1447\t05:35\t05:55\t07:08\t13:13\t16:30\t18:59\t20:22\tResûlullah Efendimiz sallallâhü aleyhi ve sellem buyurdular: “...ziyaret edip...” (Süyûtî)
-07.03.2026\tCumartesi\t17 Ramazan 1447\t05:34\t05:54\t07:06\t13:13\t16:31\t19:00\t20:23\tAllâhü Teâlâ buyurdu -meâlen-: “...sadaka al...” (Tevbe 103)
-08.03.2026\tPazar\t18 Ramazan 1447\t05:32\t05:52\t07:05\t13:13\t16:31\t19:01\t20:24\tResûlullah Efendimiz (s.a.v.) buyurdular: “...ilim öğrenmek...” (Taberânî)
-09.03.2026\tPazartesi\t19 Ramazan 1447\t05:31\t05:51\t07:03\t13:13\t16:32\t19:02\t20:25\tResûlullah (s.a.v.) buyurdular: “...infakta bulunursa...” (İbn Mâce)
-10.03.2026\tSalı\t20 Ramazan 1447\t05:29\t05:49\t07:02\t13:12\t16:32\t19:03\t20:26\tResûlullah Efendimiz sallallâhü aleyhi ve sellem buyurdular: “...borcunu geciktirmesi...” (Buhârî/Müslim)
-11.03.2026\tÇarşamba\t21 Ramazan 1447\t05:28\t05:48\t07:01\t13:12\t16:33\t19:04\t20:27\tResûlullah Efendimiz sallallâhü aleyhi ve sellem buyurdular: “...aşırı cimrilik...” (Ebû Dâvûd)
-12.03.2026\tPerşembe\t22 Ramazan 1447\t05:26\t05:46\t06:59\t13:12\t16:33\t19:05\t20:28\tResûlullah Efendimiz sallallâhü aleyhi ve sellem buyurdular: “...sadaka-i fıtır...” (Süyûtî)
-13.03.2026\tCuma\t23 Ramazan 1447\t05:25\t05:45\t06:58\t13:11\t16:34\t19:06\t20:29\tResûlullah Efendimiz sallallâhü aleyhi ve sellem buyurdular: “...ok sebebiyle...” (Nesâî)
-14.03.2026\tCumartesi\t24 Ramazan 1447\t05:23\t05:43\t06:56\t13:11\t16:34\t19:07\t20:30\tResûlullah Efendimiz sallallâhü aleyhi ve sellem buyurdular: “Zikrin en faziletlisi...” (Ahmed)
-15.03.2026\tPazar\t25 Ramazan 1447\t05:22\t05:42\t06:55\t13:11\t16:34\t19:08\t20:31\tResûlullah Efendimiz sallallâhü aleyhi ve sellem buyurdular: “...Kadir Gecesi...” (Deylemî)
-16.03.2026\tPazartesi\t26 Ramazan 1447\t05:20\t05:40\t06:53\t13:11\t16:35\t19:08\t20:31\tHazret-i Âişe (r.a.) rivâyet: “Allâhümme inneke Afüvvün...” (Tirmizî)
-17.03.2026\tSalı\t27 Ramazan 1447\t05:19\t05:39\t06:52\t13:10\t16:35\t19:09\t20:32\tResûlullah Efendimiz sallallâhü aleyhi ve sellem buyurdular: “...sabrederek...” (Kuzâî)
-18.03.2026\tÇarşamba\t28 Ramazan 1447\t05:17\t05:37\t06:51\t13:10\t16:36\t19:10\t20:33\tResûlullah Efendimiz sallallâhü aleyhi ve sellem buyurdular: “...Şevvâl’den altı gün...” (Taberânî)
-19.03.2026\tPerşembe\t29 Ramazan 1447\t05:16\t05:36\t06:49\t13:10\t16:36\t19:11\t20:34\tResûlullah Efendimiz sallallâhü aleyhi ve sellem buyurdular: “...bayram gecelerini ihyâ...” (İbn Mâce)`;
+20.02.2026\tCuma\t2 Ramazan 1447\t05:53\t06:13\t07:26\t13:16\t16:22\t18:46\t20:09\tResûlullah (s.a.v.) buyurdular: “Âdemoğlunun her ameli(nin sevabı) kat kat verilir; bir hasenenin karşılığı, on mislinden yedi yüz misline kadar olur. Allâh Azze ve Celle şöyle buyurdu: Ancak oruç müstesnâ. Çünkü oruç, benim içindir ve onun mükâfatını ancak ben veririm. Zira (kulum), şehvetini, yemesini, içmesini, sırf benim için terk eder.” (Sünen-i Nesâî)
+21.02.2026\tCumartesi\t3 Ramazan 1447\t05:52\t06:12\t07:25\t13:16\t16:22\t18:47\t20:10\tResûlullah Efendimiz sallallâhü aleyhi ve sellem buyurdular: “Kullar, Ramazân-ı şerîf ayında ne (kadar sevap ve fazilet) olduğunu bilselerdi, ümmetim, senenin tamamının Ramazân-ı şerîf olmasını elbette temenni ederdi.” (Müsned-i Ebû Ya’lâ)
+22.02.2026\tPazar\t4 Ramazan 1447\t05:51\t06:11\t07:24\t13:15\t16:23\t18:48\t20:11\tResûlullah Efendimiz sallallâhü aleyhi ve sellem buyurdular: “İlim, İslâm’ın hayatı ve imanın direğidir. Kim ilim öğretirse, Allâhü Teâlâ, onun mükâfatını tam verir. Kim öğrenir ve amel ederse Allâhü Teâlâ, ona, bilmediklerini öğretir.” (Süyûtî, el-Câmiu’s-Sağîr)
+23.02.2026\tPazartesi\t5 Ramazan 1447\t05:49\t06:09\t07:22\t13:15\t16:24\t18:49\t20:12\tHazret-i Ali radıyallâhü anh şöyle buyurdu: “Her bir dua, Muhammed sallallâhü aleyhi ve sellem’e ve onun âline salevât getirilmedikçe semâdan (Allâh’ın kabulünden) uzaktır.” (Beyhakî, Şuabü’l-Îmân)
+24.02.2026\tSalı\t6 Ramazan 1447\t05:48\t06:08\t07:21\t13:15\t16:24\t18:50\t20:13\tAllâhü Teâlâ şöyle buyurdu -meâlen-: “Ve biz onları (o peygamberleri), emrimizle doğru yolu gösterecek rehberler kıldık, onlara hayırlı işler yapmayı, dosdoğru namaz kılmayı, zekât vermeyi vahyettik. Peygamberler, bize ibadet edenlerden oldular.” (Enbiyâ Sûresi, âyet 73)
+25.02.2026\tÇarşamba\t7 Ramazan 1447\t05:47\t06:07\t07:20\t13:15\t16:25\t18:51\t20:14\tResûlullah Efendimiz sallallâhü aleyhi ve sellem buyurdular: “Kim dünyasını severse (ona meylederse) âhiretine zarar verir. Kim de âhiretini severse (ona meylederse) dünyasına zarar verir. Şu hâlde siz, bâki olan (âhiret hâyatın)ı, fâni olan (dünya hayatın)a tercih edin.” (Müsned-i Ahmed)
+26.02.2026\tPerşembe\t8 Ramazan 1447\t05:46\t06:06\t07:18\t13:15\t16:26\t18:52\t20:15\tKâ‘bü’l-Ahbâr'ın (rah.) şöyle dediği rivâyet olundu: “Kıyamet günü, her amel edene, amelinin sevabının ziyadesiyle verileceği nidâ olunur. Ancak Kur’ân-ı Kerîm’i okuyup onunla amel edenler ve oruç tutanlar müstesna; onların ecirleri hesapsız olarak verilecektir.” (Beyhakî, Şuabü’l-Îmân)
+27.02.2026\tCuma\t9 Ramazan 1447\t05:44\t06:04\t07:17\t13:15\t16:26\t18:53\t20:16\tResûlullah Efendimiz sallallâhü aleyhi ve sellem buyurdular: “Namaz, Allâhü Teâlâ tarafından emredilen amellerin en hayırlısıdır. O hâlde, kimin bu hayrı çoğaltmaya (yani nafile namazları çokça kılmaya) gücü yeterse çoğaltsın.” (Taberânî, el-Mu’cemü’l-Evsat)
+28.02.2026\tCumartesi\t10 Ramazan 1447\t05:43\t06:03\t07:16\t13:15\t16:27\t18:54\t20:17\tResûlullah Efendimiz sallallâhü aleyhi ve sellem buyurdular: “Dikkat ediniz! Vücutta küçük bir et parçası vardır ki o, iyi olursa bütün vücut iyi olur; kötü olursa bütün vücut kötü olur. İyi bilin ki o, kalptir.” (Sahîh-i Buhârî)
+01.03.2026\tPazar\t11 Ramazan 1447\t05:42\t06:02\t07:15\t13:14\t16:27\t18:55\t20:17\tResûlullah Efendimiz sallallâhü aleyhi ve sellem buyurdular: “Kurân-ı Kerîm’i devamlı okuyup onunla amel eden kimseye, Cennet’e girdiğinde, ‘Oku ve yüksel’ denilir. O da ezberindeki son âyet-i kerîmeyi bitirinceye kadar okur ve her âyetle bir derece yükselir.” (Sünen-i İbn-i Mâce)
+02.03.2026\tPazartesi\t12 Ramazan 1447\t05:41\t06:01\t07:13\t13:14\t16:28\t18:56\t20:18\tResûlullah Efendimiz sallallâhü aleyhi ve sellem buyurdular: “Her kim, mümin erkek ve kadınlar için istiğfârda bulunursa, (istiğfâr ettiği) her bir mümin erkek ve kadından dolayı Cenâb-ı Hak, o kimseye bir hasene yazar.” (Heysemî, Mecmau’z-Zevâid)
+03.03.2026\tSalı\t13 Ramazan 1447\t05:39\t05:59\t07:12\t13:14\t16:29\t18:57\t20:19\tAllâhü Teâlâ buyurdu -meâlen-: “Ey iman edenler! Siz, Allah’ın (dinini yaymakta) yardımcıları olun. Nitekim Meryem oğlu İsa (a.s.), Havârîlerine hitaben ‘Allâh’ın dinine davette benim yardımcılarım kimlerdir?’ dediğinde Havâriler, ‘Allâh’ın dinine (davette sana) yardımcılar bizleriz’ dediler.” (Saff Sûresi, âyet 14)
+04.03.2026\tÇarşamba\t14 Ramazan 1447\t05:38\t05:58\t07:10\t13:14\t16:29\t18:58\t20:20\tResûlullah Efendimiz sallallâhü aleyhi ve sellem, îtikâf yapan hakkında şöyle buyurdular: “O, günahlardan uzak durur ve ona, bütün güzel amelleri işleyen kimse gibi (îtikâf sebebiyle işleyemediği) güzel ameller(in sevabı) yazılmaya devam eder.” (Sünen-i İbn-i Mâce)
+05.03.2026\tPerşembe\t15 Ramazan 1447\t05:37\t05:57\t07:09\t13:13\t16:30\t18:58\t20:21\tResûlullah Efendimiz sallallâhü aleyhi ve sellem buyurdular: “Kadir Gecesi’ni, Ramazân-ı Şerîf’in son on gününün tek gecelerinde arayınız.” (Müttefekun Aleyh)
+06.03.2026\tCuma\t16 Ramazan 1447\t05:35\t05:55\t07:08\t13:13\t16:30\t18:59\t20:22\tResûlullah Efendimiz sallallâhü aleyhi ve sellem buyurdular: “(Bir din) kardeşini evinde ziyaret edip yemeğinden yiyen kimsenin derecesi, kendisine yemek ikram eden o kimseden daha yüksektir (yani daha çok sevap kazanır).” (Süyûtî, el-Câmiu’s-Sağîr)
+07.03.2026\tCumartesi\t17 Ramazan 1447\t05:34\t05:54\t07:06\t13:13\t16:31\t19:00\t20:23\tAllâhü Teâlâ şöyle buyurdu -meâlen-: “Onların mallarından bir sadaka (zekât) al ki, onunla kendilerini temizlemiş, tezkiye etmiş olursun...” (Tevbe Sûresi, âyet 103)
+08.03.2026\tPazar\t18 Ramazan 1447\t05:32\t05:52\t07:05\t13:13\t16:31\t19:01\t20:24\tResûlullah Efendimiz (s.a.v.) buyurdular: “Kim (amel etmek için dinimize ait) ilim öğrenmek ister ve o ilmi elde ederse, Allâhü Teâlâ, o kimse için iki ecir ihsan eder. Her kim de ilim öğrenmek ister de onu elde edemezse, Allâhü Teâlâ, o kimse için bir ecir ihsan eder.” (Taberânî, el-Mu’cemü’l-Kebîr)
+09.03.2026\tPazartesi\t19 Ramazan 1447\t05:31\t05:51\t07:03\t13:13\t16:32\t19:02\t20:25\tResûlullah (s.a.v.) buyurdular: “Her kim evinde oturduğu hâlde Allah yolunda (cihâd edenlere) infakta bulunursa, onun her bir dirhemine yedi yüz dirhem sevabı vardır. Her kim de Allah yolunda bizzât kendisi de cihâd ederek bu yolda infakta bulunursa, onun her bir dirhemine yedi yüz bin dirhem sevabı vardır.” (Sünen-i İbn-i Mâce)
+10.03.2026\tSalı\t20 Ramazan 1447\t05:29\t05:49\t07:02\t13:12\t16:32\t19:03\t20:26\tResûlullah Efendimiz sallallâhü aleyhi ve sellem buyurdular: “Zenginin (ödemeye imkânı olduğu hâlde) borcunu ödemeyi geciktirmesi, (alacaklıya büyük) bir zulümdür.” (Müttefekun Aleyh; Sahîh-i Buhârî ve Müslim)
+11.03.2026\tÇarşamba\t21 Ramazan 1447\t05:28\t05:48\t07:01\t13:12\t16:33\t19:04\t20:27\tResûlullah Efendimiz sallallâhü aleyhi ve sellem buyurdular: “Bir adamda bulunan en kötü şey (ahlâk), aşırı cimrilik ve aşırı korkaklıktır.” (Sünen-i Ebû Dâvûd)
+12.03.2026\tPerşembe\t22 Ramazan 1447\t05:26\t05:46\t06:59\t13:12\t16:33\t19:05\t20:28\tResûlullah Efendimiz sallallâhü aleyhi ve sellem buyurdular: “Ramazân-ı şerîf ayı(nın orucu), semâ ile arz arasında asılıdır. (Oruç) ancak sadaka-i fıtır (verilmek) ile Allâhü Teâlâ’ya yükseltilir (yani sevabı tam olarak verilir).” (Süyûtî, el-Câmiu’s-Sağîr)
+13.03.2026\tCuma\t23 Ramazan 1447\t05:25\t05:45\t06:58\t13:11\t16:34\t19:06\t20:29\tResûlullah Efendimiz sallallâhü aleyhi ve sellem buyurdular: “Muhakkak Allah Azze ve Celle, bir ok sebebiyle üç kişiyi Cennet’ine koyar (onlar); sırf hayır maksadıyla oku yapan, onu (din düşmanlarına) atan ve atana veren.” (Sünen-i Nesâî)
+14.03.2026\tCumartesi\t24 Ramazan 1447\t05:23\t05:43\t06:56\t13:11\t16:34\t19:07\t20:30\tResûlullah Efendimiz sallallâhü aleyhi ve sellem buyurdular: “Zikrin en faziletlisi, gizli olanıdır. Rızkın en hayırlısı, kâfi (miktarda) olandır.” (Müsned-i Ahmed bin Hanbel)
+15.03.2026\tPazar\t25 Ramazan 1447\t05:22\t05:42\t06:55\t13:11\t16:34\t19:08\t20:31\tResûlullah Efendimiz sallallâhü aleyhi ve sellem buyurdular: “Muhakkak Allâhü Teâlâ, önceki ümmetlere vermediği Kadir Gecesi’ni, benim ümmetime ihsân etti.” (Deylemî, Müsnedü’l-Firdevs)
+16.03.2026\tPazartesi\t26 Ramazan 1447\t05:20\t05:40\t06:53\t13:11\t16:35\t19:08\t20:31\tHazret-i Âişe radıyallâhü anhâ Validemizden şöyle rivâyet olundu: “Yâ Resûlallâh! Kadir Gecesi’nin hangi gece olduğunu bilirsem nasıl dua edeyim, haber verir misiniz?” dedim. Peygamberimiz (sallallâhü aleyhi ve sellem), “Allâhümme inneke Afüvvün Kerîmün tühıbbü’l-afve fa‘fü annî” diye dua et.” buyurdular. (Sünen-i Tirmizî)
+17.03.2026\tSalı\t27 Ramazan 1447\t05:19\t05:39\t06:52\t13:10\t16:35\t19:09\t20:32\tResûlullah Efendimiz sallallâhü aleyhi ve sellem buyurdular: “Kulun, belâ ve musibetlere sabrederek onlardan kurtulmayı (Allâhü Teâlâ’dan) beklemesi, ibadettir.” (Kuzâî, Müsnedü’ş-Şihâb)
+18.03.2026\tÇarşamba\t28 Ramazan 1447\t05:17\t05:37\t06:51\t13:10\t16:36\t19:10\t20:33\tResûlullah Efendimiz sallallâhü aleyhi ve sellem buyurdular: “Kim Ramazan orucunu tutar, Şevvâl’den de altı gün ilave ederse anasından doğduğu günkü gibi günahlarından temizlenir.” (Taberânî, el-Mu’cemü’l-Evsat)
+19.03.2026\tPerşembe\t29 Ramazan 1447\t05:16\t05:36\t06:49\t13:10\t16:36\t19:11\t20:34\tResûlullah Efendimiz sallallâhü aleyhi ve sellem buyurdular: “Kim, Ramazan ve Kurban bayramı gecelerini, mükâfatını yalnızca Allâhü Teâlâ’dan bekleyerek ihyâ ederse, kalplerin öldüğü günde, onun kalbi ölmez.” (Sünen-i İbn-i Mâce)`;
 
-/* ====== PARSE ====== */
+/* ====== Parse ====== */
 function cleanHadis(h){
   if(!h) return "";
   const cut = h.indexOf("TÜM VERİLERİ");
@@ -575,7 +518,7 @@ function parseTSV(tsv){
   const out = {};
   for(let i=1;i<lines.length;i++){
     const cols = lines[i].split("\t");
-    if(cols.length < 10) continue;
+    if(cols.length < 11) continue;
     const row = {};
     headers.forEach((h,idx)=> row[h] = (cols[idx] ?? "").trim());
     const key = row.tarih;
@@ -602,7 +545,6 @@ const order = [
   {key:"yatsi", label:"Yatsı"}
 ];
 
-/* ====== ELEMENTS ====== */
 const elList = document.getElementById("vakitList");
 const elCountdownLabel = document.getElementById("countdownLabel");
 const elCountdownTime  = document.getElementById("countdownTime");
@@ -613,19 +555,18 @@ const elNote = document.getElementById("dataNote");
 const elHadisText = document.getElementById("hadisText");
 const elHadisViewport = document.getElementById("hadisViewport");
 
-/* Toast */
 const elToast = document.getElementById("toast");
 const elToastTitle = document.getElementById("toastTitle");
 const elToastSub = document.getElementById("toastSub");
 
-/* ====== TICKER ====== */
+/* Ticker metni */
 const sep = "  •  ";
 document.getElementById("tickerText").textContent =
   "Hoş geldiniz" + sep +
   "Ramazan-ı Şerifiniz mübarek olsun." + sep +
   "Talebelerimize verilen yurt ve tahsil hizmetinde emeği geçen bu müesseselerimizin bugünlere gelmesinde; iftarlarıyla, zekatlarıyla, kurbanlarıyla destek olan siz değerli misafirlerimize bu tatlı yolculukta bizleri yalnız bırakmadığınız için personelimiz ve yurt yönetimi adına teşekkür ederiz.";
 
-/* ===== Helpers ===== */
+/* Helpers */
 function todayKeyTR(d=new Date()){ return d.toLocaleDateString("tr-TR"); }
 function toISOFromTRKey(trKey){
   const [dd,mm,yyyy] = trKey.split(".");
@@ -638,7 +579,6 @@ function buildDateAt(trKey, hhmm){
 function pad2(n){ return String(n).padStart(2,"0"); }
 function labelUpperTR(s){ return (s||"").toLocaleUpperCase("tr-TR"); }
 
-/* ===== Vakit list render ===== */
 function renderRows(day){
   elList.innerHTML = "";
   order.forEach(o=>{
@@ -679,8 +619,6 @@ function computeNextAndActive(dayKey, dayData){
   }
   return { next:null, activeKey:"yatsi" };
 }
-
-/* ✅ 15 dakika altı + LABEL ALL CAPS */
 function updateCountdown(nextObj){
   if(!nextObj){
     elCountdownLabel.textContent = "VAKTİNE KALAN SÜRE:";
@@ -690,7 +628,6 @@ function updateCountdown(nextObj){
   }
   const now = new Date();
   let diff = Math.max(0, Math.floor((nextObj.time - now)/1000));
-
   const h = Math.floor(diff/3600); diff%=3600;
   const m = Math.floor(diff/60);
   const s = diff%60;
@@ -699,14 +636,44 @@ function updateCountdown(nextObj){
   elCountdownTime.textContent  = `${pad2(h)}:${pad2(m)}:${pad2(s)}`;
 
   const totalSeconds = (h*3600)+(m*60)+s;
-  if(totalSeconds < 15*60){
-    elCountdownTime.classList.add("critical");
-  }else{
-    elCountdownTime.classList.remove("critical");
-  }
+  if(totalSeconds < 15*60) elCountdownTime.classList.add("critical");
+  else elCountdownTime.classList.remove("critical");
 }
 
-/* ===== Toast (Vakit girince bildirim) ===== */
+/* Hadis: sığdır + gerekirse çok yavaş kaydır */
+let hadisAnim = null;
+function fitTextToViewport(el, viewport, maxPx=16, minPx=11){
+  if(hadisAnim){ try{hadisAnim.cancel();}catch(e){} hadisAnim=null; }
+  el.style.transform = "translate3d(0,0,0)";
+  el.style.fontSize = maxPx + "px";
+
+  let fs = maxPx;
+  for(let i=0;i<24;i++){
+    if(el.scrollHeight <= viewport.clientHeight + 2) break;
+    fs = Math.max(minPx, fs - 0.7);
+    el.style.fontSize = fs + "px";
+    if(fs <= minPx) break;
+  }
+
+  requestAnimationFrame(()=>{
+    const viewportH = viewport.clientHeight;
+    const contentH  = el.scrollHeight;
+    if(contentH > viewportH + 10){
+      const distance = contentH - viewportH;
+      const duration = Math.min(90000, Math.max(38000, distance * 70));
+      hadisAnim = el.animate(
+        [{ transform:"translate3d(0,0,0)" }, { transform:`translate3d(0,-${distance}px,0)` }],
+        { duration, direction:"alternate", easing:"linear", iterations: Infinity }
+      );
+    }
+  });
+}
+function setHadis(h){
+  elHadisText.textContent = h || "Bugünün hadisi bulunamadı.";
+  fitTextToViewport(elHadisText, elHadisViewport, 16, 11);
+}
+
+/* Toast */
 let toastTimer = null;
 function showToast(title, sub){
   elToastTitle.textContent = title;
@@ -718,54 +685,16 @@ function showToast(title, sub){
   toastTimer = setTimeout(()=> elToast.classList.remove("on"), 6500);
 }
 
-/* ===== Hadis: auto font fit + (gerekirse) yavaş kaydır ===== */
-let hadisAnim = null;
-
-function fitTextToViewport(el, viewport, maxPx=16.5, minPx=12){
-  if(hadisAnim){ try{hadisAnim.cancel();}catch(e){} hadisAnim=null; }
-  el.style.transform = "translateY(0)";
-  el.style.fontSize = maxPx + "px";
-
-  let fs = maxPx;
-  for(let i=0;i<14;i++){
-    const fits = el.scrollHeight <= viewport.clientHeight + 2;
-    if(fits) break;
-    fs = Math.max(minPx, fs - 0.8);
-    el.style.fontSize = fs + "px";
-    if(fs <= minPx) break;
-  }
-
-  requestAnimationFrame(()=>{
-    const viewportH = viewport.clientHeight;
-    const contentH  = el.scrollHeight;
-    if(contentH > viewportH + 10){
-      const distance = contentH - viewportH;
-      const duration = Math.min(65000, Math.max(26000, distance * 55));
-      hadisAnim = el.animate(
-        [{ transform:"translateY(0)" }, { transform:`translateY(-${distance}px)` }],
-        { duration, direction:"alternate", easing:"linear", iterations: Infinity }
-      );
-    }
-  });
-}
-
-function setHadis(hadisText){
-  elHadisText.textContent = hadisText || "Bugünün hadisi bulunamadı.";
-  fitTextToViewport(elHadisText, elHadisViewport, 16.5, 12);
-}
-
-/* ===== Foto: 26 foto otomatik ===== */
+/* Foto (26 adet: foto1.jpg...foto26.jpg) */
 const photos = Array.from({length:26}, (_,i)=> `fotograflar/foto${i+1}.jpg`);
 let photoIndex = 0;
 const photoA = document.getElementById("photoA");
 const photoB = document.getElementById("photoB");
 let showA = true;
-
 function swapPhoto(){
   if(photos.length < 2) return;
   photoIndex = (photoIndex + 1) % photos.length;
   const nextSrc = photos[photoIndex];
-
   if(showA){
     photoB.src = nextSrc; photoB.classList.add("on"); photoA.classList.remove("on");
   }else{
@@ -775,9 +704,34 @@ function swapPhoto(){
 }
 setInterval(swapPhoto, 30000);
 
-/* ===== Main tick ===== */
-let prevActiveKey = null;
+/* Ticker rAF motor (TV'de daha stabil) */
+const tickerEl = document.getElementById("tickerText");
+let tickerX = 0;
+let tickerSpeedPxPerSec = 80; // 60-90 arası ayarlanır
+let lastTS = 0;
 
+function ensureTickerWidth(){
+  const t = tickerEl.textContent;
+  tickerEl.textContent = t + "   •   " + t;
+}
+ensureTickerWidth();
+
+function tickTicker(ts){
+  if(!lastTS) lastTS = ts;
+  const dt = (ts - lastTS) / 1000;
+  lastTS = ts;
+
+  const w = tickerEl.scrollWidth / 2;
+  tickerX -= tickerSpeedPxPerSec * dt;
+  if(Math.abs(tickerX) > w) tickerX = 0;
+
+  tickerEl.style.transform = `translate3d(${tickerX}px,0,0)`;
+  requestAnimationFrame(tickTicker);
+}
+requestAnimationFrame(tickTicker);
+
+/* Main tick */
+let prevActiveKey = null;
 function tick(){
   const dayKey = todayKeyTR();
   const dayData = vakitler[dayKey];
@@ -807,21 +761,19 @@ function tick(){
     const activeLabel = order.find(o=>o.key===activeKey)?.label || activeKey;
     const activeTime = dayData[activeKey] || "";
     showToast(`VAKİT GİRDİ: ${labelUpperTR(activeLabel)}`, activeTime ? `Saat: ${activeTime}` : "");
+    // hadis de günlük değişiyorsa yenile
+    setHadis(dayData.hadis);
   }
   prevActiveKey = activeKey;
 }
-
 tick();
 setInterval(tick, 1000);
 
-window.addEventListener("resize", ()=>{
-  fitTextToViewport(elHadisText, elHadisViewport, 16.5, 12);
-});
+window.addEventListener("resize", ()=> fitTextToViewport(elHadisText, elHadisViewport, 16, 11));
 
-/* ====== PARILTI ====== */
+/* FX üret */
 const bgFX = document.getElementById("bgFX");
 function rand(min,max){ return Math.random()*(max-min)+min; }
-
 function makeSpark(){
   const s = document.createElement("div");
   s.className = "spark";
@@ -848,7 +800,6 @@ function makeBokeh(){
   bgFX.appendChild(b);
   setTimeout(()=> b.remove(), 20000);
 }
-
 setInterval(makeSpark, 230);
 setInterval(makeBokeh, 1500);
 for(let i=0;i<18;i++) setTimeout(makeSpark, i*80);
