@@ -562,8 +562,6 @@ const elToastSub = document.getElementById("toastSub");
 /* Ticker metni */
 const sep = "  •  ";
 document.getElementById("tickerText").textContent =
-  "Hoş geldiniz" + sep +
-  "Ramazan-ı Şerifiniz mübarek olsun." + sep +
   "Talebelerimize verilen yurt ve tahsil hizmetinde emeği geçen bu müesseselerimizin bugünlere gelmesinde; iftarlarıyla, zekatlarıyla, kurbanlarıyla destek olan siz değerli misafirlerimize bu tatlı yolculukta bizleri yalnız bırakmadığınız için personelimiz ve yurt yönetimi adına teşekkür ederiz.";
 
 /* Helpers */
@@ -707,7 +705,7 @@ setInterval(swapPhoto, 30000);
 /* Ticker rAF motor (TV'de daha stabil) */
 const tickerEl = document.getElementById("tickerText");
 let tickerX = 0;
-let tickerSpeedPxPerSec = 40; // 60-90 arası ayarlanır
+let tickerSpeedPxPerSec = 20; // 60-90 arası ayarlanır
 let lastTS = 0;
 
 function ensureTickerWidth(){
@@ -807,5 +805,6 @@ for(let i=0;i<6;i++)  setTimeout(makeBokeh, i*260);
 </script>
 </body>
 </html>
+
 
 
